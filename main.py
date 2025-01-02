@@ -8,6 +8,12 @@ import sys
 from shot import Shot
 
 
+def draw_score(screen, score):
+    font = pygame.font.Font(None, 36)
+    text = font.render(f"Score: {score}", True, (255, 255, 255))
+    screen.blit(text, (640, 10))
+
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -28,6 +34,8 @@ def main():
 
     dt = 0
 
+    score = 0
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -40,17 +48,26 @@ def main():
             if asteroid.collisions(player):
                 pygame.quit()
                 print("Game over!")
+                print(f"Final Score: {score}")
                 sys.exit()
             for shot in shots:
                 if asteroid.collisions(shot):
+                    # print("Collision Detected")
                     shot.kill()
-                    asteroid.split()
+                    # print("Shot Killed")
+                    split_result = asteroid.split()
+                    # print(f"Split Result {split_result}")
+                    if split_result == 2:
+                        score += 2
+                    else:
+                        score += 1
 
         screen.fill("black")
 
         for i in drawable:
             i.draw(screen)
 
+        draw_score(screen, score)
         pygame.display.flip()
         dt = timer.tick(60) / 1000
 
