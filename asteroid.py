@@ -2,6 +2,7 @@ import pygame
 import random
 from circleshape import CircleShape
 from constants import ASTEROID_MIN_RADIUS
+from particle import Particle
 
 
 class Asteroid(CircleShape):
@@ -14,7 +15,19 @@ class Asteroid(CircleShape):
     def update(self, dt):
         self.position += self.velocity * dt
 
+    def create_explosion(self):
+        num_particles = 20
+        for i in range(num_particles):
+            particle = Particle(self.position.x, self.position.y)
+            angle = random.uniform(0, 360)
+            speed = random.uniform(50, 150)
+            particle.velocity = pygame.Vector2(speed, 0).rotate(angle)
+            # print(
+            #     f"Created particle {i} at position {particle.position} with velocity {particle.velocity}"
+            # )
+
     def split(self):
+        self.create_explosion()
         self.kill()
         # print(f"Current radius: {self.radius}")  # Debug print
         # print(f"Min radius: {ASTEROID_MIN_RADIUS}")
